@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+
+# environment
+.env
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# uploads (jika tidak ingin disimpan di repo)
+uploads/
+
+# OS
+.DS_Store
+Thumbs.db

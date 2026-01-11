@@ -55,24 +55,18 @@ router.post("/register", async (req, res) => {
     db.query(
       "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
       [name, email, hash],
-      (err, result) => {
+      (err) => {
         if (err) return res.status(500).json({ message: "Database error" });
 
-        const apiKey = uuidv4();
-        db.query(
-          "INSERT INTO api_keys (user_id, api_key, status) VALUES (?, ?, 'active')",
-          [result.insertId, apiKey],
-          (err2) => {
-            if (err2) return res.status(500).json({ message: "Database error" });
-            res.json({ apiKey });
-          }
-        );
+        // ❌ JANGAN buat API key di sini
+        res.json({ message: "Register success" });
       }
     );
   } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 });
+
 
 /**
  * @swagger
@@ -124,9 +118,24 @@ router.post("/login", (req, res) => {
       });
       res.json({
         token,
-        apiKey: keys[0].api_key,
-        role: user.role  // tambahkan role
+        hasApiKey: keys.length > 0,
+        role: user.role
       });
+      router.post("/generate-key", (req, res) => {
+        const userId = req.user.id;   // dari JWT middleware
+        const apiKey = uuidv4();
+
+        db.query(
+          "INSERT INTO api_keys (user_id, api_key, status) VALUES (?, ?, 'active')",
+          [userId, apiKey],
+          (err) => {
+            if (err) return res.status(500).json({ message: "Database error" });
+
+            res.json({ apiKey });
+          }
+        );
+      });
+
 
     });
   });

@@ -11,9 +11,15 @@ export default function Login() {
       .post("http://localhost:5000/api/auth/login", { email, password })
       .then((res) => {
         localStorage.setItem("token", res.data.token);
-        localStorage.setItem("apiKey", res.data.apiKey);
-        window.location = "/dashboard";
+        localStorage.setItem("role", res.data.role);
+
+        if (res.data.role === "admin") {
+          window.location = "/admin";
+        } else {
+          window.location = "/dashboard";
+        }
       })
+
       .catch(() => {
         alert("Email atau password salah");
       });

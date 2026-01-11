@@ -11,6 +11,10 @@ app.use(express.json());
 // ROUTES
 app.use("/api/auth", require("./routes/auth"));
 app.use("/api/books", require("./routes/books"));
+app.use("/apikey", require("./routes/apikey")); 
+app.use("/api/admin", require("./routes/admin"));
+app.use("/uploads", express.static("uploads"));
+
 
 // SWAGGER
 const swaggerDocument = YAML.load("./swagger.yaml");
