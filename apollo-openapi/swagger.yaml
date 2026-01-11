@@ -1,0 +1,117 @@
+openapi: 3.0.0
+info:
+  title: Apollo Open API
+  description: Open API Platform for Book Library
+  version: 1.0.0
+
+servers:
+  - url: http://localhost:5000
+
+tags:
+  - name: Books
+    description: Book API (Protected with API Key)
+
+# 🔐 API KEY DEFINITION
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: x-api-key
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /api/books:
+    get:
+      tags:
+        - Books
+      summary: Get all books
+      security:
+        - ApiKeyAuth: []
+      responses:
+        "200":
+          description: List of books
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    title:
+                      type: string
+                    author:
+                      type: string
+                    year:
+                      type: integer
+                    status:
+                      type: string
+
+    post:
+      tags:
+        - Books
+      summary: Add new book
+      security:
+        - ApiKeyAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - author
+              properties:
+                title:
+                  type: string
+                author:
+                  type: string
+                year:
+                  type: integer
+                status:
+                  type: string
+      responses:
+        "200":
+          description: Book added
+          content:
+            application/json:
+              example:
+                message: Book added
+
+  /api/books/{id}:
+    get:
+      tags:
+        - Books
+      summary: Get book by ID
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Book data
+
+    delete:
+      tags:
+        - Books
+      summary: Delete book
+      security:
+        - ApiKeyAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Deleted
